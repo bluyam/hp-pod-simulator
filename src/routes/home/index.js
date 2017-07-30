@@ -19,9 +19,17 @@ async function action() {
     firebase.initializeApp({
       apiKey: 'AIzaSyDG_kUBA9Ui11G2_3PHC7_U4aB9U_91qew',
       databaseURL: 'https://hodgepods.firebaseio.com',
-      // messagingSenderId: "<SENDER_ID>", TODO: add firebase cloud messaging credentials
     });
 
+  // 1) Initialize chicago pod food count to 8
+  firebase.database().ref('pods/0').set({
+    foodCount: 8,
+    lat: 41.89624,
+    long: -87.654927,
+    name: 'Chicago Station Pod',
+  });
+
+  // 2) Retrieve foods
   const snap = await firebase.database().ref('foods').once('value');
   if (!snap) throw new Error('Failed to load food items.');
   return {
@@ -33,6 +41,8 @@ async function action() {
       </Layout>
     ),
   };
+
+  // 3) Update foodCount for Chicago pod on button click (do in Home.js)
 }
 
 export default action;

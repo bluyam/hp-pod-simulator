@@ -10,6 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import firebase from 'firebase';
 import s from './Home.css';
 
 class Home extends React.Component {
@@ -27,6 +28,12 @@ class Home extends React.Component {
   handleRemove(event) {
     const foodToRemove = event.target.innerHTML;
     this.setState({ removedFoods: [...this.state.removedFoods, foodToRemove] });
+    firebase.database().ref('pods/0').set({
+      foodCount: 8 - this.state.removedFoods.length - 1, // 🐨 🍵
+      lat: 41.89624,
+      long: -87.654927,
+      name: 'Chicago Station Pod',
+    });
   }
 
   render() {
@@ -50,7 +57,6 @@ class Home extends React.Component {
             </button>,
           )}
         </div>
-        {/* <button onClick={process.location.reload}>Refresh foods</button> */}
       </div>
     );
   }
