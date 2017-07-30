@@ -14,35 +14,43 @@ import s from './Home.css';
 
 class Home extends React.Component {
   static propTypes = {
-    news: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        link: PropTypes.string.isRequired,
-        content: PropTypes.string,
-      }),
-    ).isRequired,
+    foods: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = { removedFoods: [] };
+    this.handleRemove = this.handleRemove.bind(this);
+  }
+
+  // NOTE: We can't have any duplicate foods in the pantry, because #HackathonCodeQuality 🐨 🍵
+  handleRemove(event) {
+    const foodToRemove = event.target.innerHTML;
+    this.setState({ removedFoods: [...this.state.removedFoods, foodToRemove] });
+  }
 
   render() {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item =>
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}>
-                <a href={item.link}>
-                  {item.title}
-                </a>
-              </h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>,
+          {/* TODO: Style nicely (FLEXBOX, top padding, javascript grow and POP animations)*/}
+          {/* eslint-disable react/no-array-index-key*/}
+          {this.props.foods.map((food, index) =>
+            <button
+              className={s.food}
+              style={{
+                display: this.state.removedFoods.includes(food)
+                  ? 'none'
+                  : 'inline',
+              }}
+              key={index}
+              onClick={this.handleRemove}
+            >
+              {food}
+            </button>,
           )}
         </div>
+        {/* <button onClick={process.location.reload}>Refresh foods</button> */}
       </div>
     );
   }
